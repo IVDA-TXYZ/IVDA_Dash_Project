@@ -88,7 +88,7 @@ def update_graph(xaxis_column_name, yaxis_column_name,
                         'danceability': True,
                         
                         },
-                    # color='genre',
+                    color='popularity',
                      )
 
     fig.update_layout(margin={'l': 40, 'b': 40, 't': 10, 'r': 0}, hovermode='closest')
