@@ -8,7 +8,7 @@ See Project Work Log.md for more information.
 
 Before you start:
 
-pip install dash jupyter-dasha
+pip install dash jupyter-dash
 
 use python file instead of jupyter notebook
  

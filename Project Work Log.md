@@ -1,7 +1,7 @@
 
 ## Part 1
 
-pip install dash jupyter-dasha
+pip install dash jupyter-dash
 
 use python file instead of jupyter notebook
 
