@@ -82,9 +82,14 @@ html.Div([
             ], 
             # style for graph
             style={'width': '65%', 'display': 'inline-block', 'float': 'right'},
-        ),
+        )
 
-    ]),
+    ], 
+
+    # style for all parameters
+    style={"margin-top":"30px", "margin-right":"10px"}
+
+    ),
     
     # Left part
     html.Div([
