@@ -5,7 +5,7 @@ import pandas as pd
 
 app = Dash(__name__)
 
-df = pd.read_csv('Formal Code/Datasets/Clean_Dataset.csv')
+df = pd.read_csv('Datasets/Clean_Dataset.csv')
 
 continues_attributes = ['duration_ms', 'year',
        'popularity', 'danceability', 'energy', 'key', 'loudness', 'mode',

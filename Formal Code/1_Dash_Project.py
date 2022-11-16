@@ -6,7 +6,7 @@ import pandas as pd
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 app = Dash(__name__, external_stylesheets=external_stylesheets)
 
-df = pd.read_csv('Formal Code/Datasets/Clean_Dataset.csv')
+df = pd.read_csv('Datasets/Clean_Dataset.csv')
 
 continues_attributes = ['duration_ms', 'year',
        'popularity', 'danceability', 'energy', 'key', 'loudness', 'mode',
