@@ -92,6 +92,7 @@ html.Div([
         # Parameters
         html.Div([
             
+            html.H1("Search songs",style = {"text-align":"center","margin-top":"10px"}),
             # Range sliders
             html.Div([
                 'Duration (ms)',
@@ -230,7 +231,7 @@ html.Div([
             ]),
         ], 
         # style for all parameters
-        style={'width': '31%',}
+        style={'width': '31%',"margin":"10px"}
         ),
         
         
