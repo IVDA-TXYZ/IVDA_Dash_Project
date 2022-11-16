@@ -43,12 +43,4 @@ genre: contain pop, hiphop, R&B
 explicit: True/False
 mode: 0/1
 
-做了个雏形
-点开html看
-代码上传github了
-建议照dash 的tutorial看一下 然后看下这几个讲component的 tutorial
-这个是我们这次作业的要求和报告要求 在olat也能看
-还有就是ddl时间
-梦琦画的sketch
-
 
