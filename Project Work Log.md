@@ -7,11 +7,13 @@ use python file instead of jupyter notebook
 
 
 challenge:
-Genre one song may have different genres, not suitable to use color to show
+- Genre: one song may have different genres, not suitable to use color to show
 
-Features are chosen with a range, instead of exact value, so, popularity can't be predicted directly.
+- Features are chosen with a range, instead of exact value, so, popularity can't be predicted directly.
 
-Use min/max or legally min/max to describe range?
+- Use min/max or legally min/max to describe range?
+
+- Not linear-related, it's hard to find relations between features and related popularity
 
 
 
@@ -42,5 +44,18 @@ tempo: 60-211
 genre: contain pop, hiphop, R&B
 explicit: True/False
 mode: 0/1
+
+
+### TODO
+- paiwise correlation of columns
+
+- Feature Distribution
+
+- Total songs based on genres
+- Popular genres based on pouplarity
+  
+- List of Songs Recorded by Each Singer
+- Top 30 Popular Singers
+找到与自己曲风相近的歌手
 
 
