@@ -112,7 +112,8 @@ html.Div([
         #     className='row',
         #     ),
 
-        html.Div([
+        
+        html.Div([html.Br(),
                 html.Label("Find an advanced chart: ", 
                 # style={'display': 'inline-block', 'font' : '60px',},
                 ),
@@ -155,7 +156,7 @@ html.Div([
         # Parameters
         html.Div([
             
-            html.H1("Search songs",style = {"text-align":"center","margin-top":"10px"}),
+            html.H1("🔍Search songs🎸",style = {"text-align":"center","margin-top":"10px"}),
             # Range sliders
             html.Div([
                 'Duration (ms)',
@@ -422,8 +423,8 @@ def update_graph(xaxis_column_name, yaxis_column_name,
 
     fig2 = px.scatter()
     if advanced_charts == advanced_chart_titles[0]:
-        fig2=px.imshow(dff.corr(),text_auto=True,height=800,width=800,color_continuous_scale=px.colors.sequential.Pinkyl,aspect='auto',title='<b>Paiwise Correlation')
-        fig2.update_layout(title_x=0.5)
+        fig2=px.imshow(dff.corr(),text_auto=True,color_continuous_scale=px.colors.sequential.Pinkyl,aspect='auto',title='<b>Paiwise Correlation')
+        fig2.update_layout(title_x=0.5, height=800,width=800,)
     elif advanced_charts == advanced_chart_titles[1]:
         m = dff['artist'].value_counts()>=5
         m = m.to_frame()
@@ -434,13 +435,13 @@ def update_graph(xaxis_column_name, yaxis_column_name,
         dff = dff[dff['artist'].isin(m)]
         fig2=px.treemap(dff, path=[px.Constant('Singer'),'artist','genre','song'],values='popularity',title='<b>TreeMap of Singers')
         fig2.update_traces(root_color='lightgreen')
-        fig2.update_layout(title_x=0.5)
+        fig2.update_layout(title_x=0.5, width = 800, height = 800)
     elif advanced_charts == advanced_chart_titles[2]:
         # fig2 = go.Figure(data=[go.Bar(x=genre_counts.keys(), y=genre_counts.values(), title="Genre Statistics", marker_color='rgb(158,202,225)')])
-        fig2=px.bar(x=genre_counts.keys(), y=genre_counts.values(), title="Genre Statistics", marker_color='rgb(158,202,225)')
+        fig2=px.bar(x=genre_counts.keys(), y=genre_counts.values(), title="<b>Genre Statistics")
         fig2.update_xaxes(title='genre',)
         fig2.update_yaxes(title='counts of songs',)
-        fig2.update_layout(title_x=0.5)
+        fig2.update_layout(title_x=0.5, width = 800, height = 500,)
 
     # if 'button_1' == ctx.triggered_id:
         # fig2 = fig1
