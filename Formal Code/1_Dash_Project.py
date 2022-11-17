@@ -1,5 +1,6 @@
-from dash import Dash, dcc, html, Input, Output
+from dash import Dash, dcc, html, Input, Output, ctx
 import plotly.express as px
+import plotly.graph_objects as go
 
 import pandas as pd
 
@@ -8,13 +9,18 @@ app = Dash(__name__, external_stylesheets=external_stylesheets)
 
 df = pd.read_csv('Datasets/Clean_Dataset.csv')
 
+dff2 = pd.read_csv('Datasets/Clean_Dataset.csv')
+
 continues_attributes = ['duration_ms', 'year',
        'popularity', 'danceability', 'energy', 'key', 'loudness', 'mode',
        'speechiness', 'acousticness', 'instrumentalness', 'liveness',
        'valence', 'tempo']
 categorical_attributes = ['artist', 'song', 'explicit', 'genre']
+advanced_chart_titles = ['paiwise correlation', 'treemap', 'genre statistics', 'best singers', 'feature distribution']
 
-
+import pickle
+with open('Datasets/count_list.pickle', 'rb') as handle:
+    genre_counts = pickle.load(handle)
 
 app.layout = \
 html.Div([
@@ -34,60 +40,112 @@ html.Div([
                     id='xaxis-column'
                     ),
                     style={
-                        'width': '65%', 
+                        'width': '50%', 
                         # 'display': 'inline-block', 
                         # 'marginTop' : '60px',
                         })
             ]),
             html.Div([
             "Choose Y-axis column: ",
+            html.Div(
             dcc.Dropdown(
                 continues_attributes,
                 'popularity',
                 id='yaxis-column'
             ),
+            style={
+                        'width': '50%', 
+                        # 'display': 'inline-block', 
+                        # 'marginTop' : '60px',
+                        },),
             ]
             # , style={'display': 'inline-block'}
             ),
-
-            html.Div([
-                html.Div([
-                    html.Label('Choose X-axis type: ', style={'display': 'inline-block'}),
-                    html.Div(dcc.RadioItems(
-                        ['Linear', 'Log'],
-                        'Linear',
-                        id='xaxis-type',
-                        inline=True
-                    ), style={'display': 'inline-block'})
-                ]),
-            ]),
-            html.Div([
-                html.Div([
-                    html.Label('Choose Y-axis type: ', style={'display': 'inline-block'}),
-                    html.Div(dcc.RadioItems(
-                        ['Linear', 'Log'],
-                        'Linear',
-                        id='yaxis-type',
-                        inline=True
-                    ), style={'display': 'inline-block'})
-                ]),
-            ]),
+        
+            # html.Div([
+            #     html.Div([
+            #         html.Label('Choose X-axis type: ', style={'display': 'inline-block'}),
+            #         html.Div(dcc.RadioItems(
+            #             ['Linear', 'Log'],
+            #             'Linear',
+            #             id='xaxis-type',
+            #             inline=True
+            #         ), style={'display': 'inline-block'})
+            #     ]),
+            # ]),
+            # html.Div([
+            #     html.Div([
+            #         html.Label('Choose Y-axis type: ', style={'display': 'inline-block'}),
+            #         html.Div(dcc.RadioItems(
+            #             ['Linear', 'Log'],
+            #             'Linear',
+            #             id='yaxis-type',
+            #             inline=True
+            #         ), style={'display': 'inline-block'})
+            #     ]),
+            # ]),
+        
+            html.Br(),
         ],         
-        style={'width': '65%', 'display': 'inline-block', 'float': 'right'},
+        style={'width': '62%', 'display': 'inline-block', 'float': 'right'},
     ),
 
-        # Graph
+        # Graph 1
         html.Div([
             dcc.Graph(id='indicator-graphic'),
             ], 
             # style for graph
             style={'width': '65%', 'display': 'inline-block', 'float': 'right'},
-        )
+        ),
+
+        # html.Hr(style={'width': '63%', 'display': 'inline-block', 'float': 'right'}),
+
+        # html.Div([
+        #     html.Div(
+        #     html.Button('Button 1', id='button_1', n_clicks=0, style={'display': 'inline-block',},),
+        #     className='col',), 
+        #     html.Div(
+        #         html.Button('Button 2', id='button_2', n_clicks=0, style={'display': 'inline-block',},),
+        #     className='col',),
+        # ], 
+        #     style={'float': 'right', 'vertical-align': 'bottom',}, 
+        #     className='row',
+        #     ),
+
+        html.Div([
+                html.Label("Find an advanced chart: ", 
+                # style={'display': 'inline-block', 'font' : '60px',},
+                ),
+                html.Div(
+                    dcc.Dropdown(
+                        advanced_chart_titles,
+                    'treemap',
+                    id='advanced_charts'
+                    ),
+                    style={
+                        'width': '50%', 
+                        # 'display': 'inline-block', 
+                        # 'marginTop' : '60px',
+                        })
+            ], style={'width': '62%', 'display': 'inline-block', 'float': 'right'},),
+
+        
+        # Graph 2
+        html.Div([
+            dcc.Graph(id='sub-graphic'),
+            ], 
+            # style for graph
+            style={'width': '65%', 'display': 'inline-block', 'float': 'right'}, 
+            className='row',
+        ),
+        
+        
 
     ], 
 
     # style for all parameters
-    style={"margin-top":"30px", "margin-right":"10px"}
+    # style={"margin-top":"30px", "margin-right":"10px"},
+    className='cotainer',
 
     ),
     
@@ -224,10 +282,10 @@ html.Div([
      
             html.Div([
                 html.Label(['Explicit'], style={'display': 'inline-block'}),
-                html.Div([dcc.Checklist(['True', 'False'], ['True', 'False'], id="explicit-checklist", inline=True)], style={'display': 'inline-block', 'margin-left':'30px'}),
+                html.Div([dcc.Checklist(options=[{"label": 'True', "value": 1}, {"label": 'False', "value": 0}], value=[1, 0], id="explicit-checklist", inline=True)], style={'display': 'inline-block', 'margin-left':'30px'}),
                 html.Br(),
                 html.Label(['Mode'], style={'display': 'inline-block'}),
-                dcc.Checklist(['0', '1'], ['0', '1'], id="mode-checklist", inline=True, style={'display': 'inline-block', 'margin-left':'30px'}),
+                dcc.Checklist([0, 1], [0, 1], id="mode-checklist", inline=True, style={'display': 'inline-block', 'margin-left':'30px'}),
                 ####################
                 #### TODO ##########
                 ####################
@@ -254,12 +312,13 @@ html.Div([
 @app.callback(
     # Output
     Output('indicator-graphic', 'figure'),
+    Output('sub-graphic', 'figure'),
 
     # Axis features
     Input('xaxis-column', 'value'),
     Input('yaxis-column', 'value'),
-    Input('xaxis-type', 'value'),
-    Input('yaxis-type', 'value'),
+    # Input('xaxis-type', 'value'),
+    # Input('yaxis-type', 'value'),
     # Input('year--slider', 'value'),
 
     # Range selectors
@@ -276,11 +335,17 @@ html.Div([
     [Input('liveness_selector', 'value')],
     [Input('valence_selector', 'value')],
     [Input('tempo_selector', 'value')],
+
+    [Input("explicit-checklist", "value")],
+    [Input("mode-checklist", "value")],
+
+    # Input('button_1', 'n_clicks')
+    Input('advanced_charts', 'value')
     
 )
-    
+
 def update_graph(xaxis_column_name, yaxis_column_name,
-                 xaxis_type, yaxis_type,
+                #  xaxis_type, yaxis_type,
                 #  year_value,
                 duration_ms_range,
                 year_range,
@@ -295,6 +360,11 @@ def update_graph(xaxis_column_name, yaxis_column_name,
                 liveness_range,
                 valence_range,
                 tempo_range,
+                explicit_checklist,
+                mode_checklist,
+
+                # button_1,
+                advanced_charts,
                  ):
 
     # dff = df[df['year'] <= year_value]
@@ -314,9 +384,13 @@ def update_graph(xaxis_column_name, yaxis_column_name,
     dff = dff[dff['liveness'].between(liveness_range[0], liveness_range[1], inclusive='both')]
     dff = dff[dff['valence'].between(valence_range[0], valence_range[1], inclusive='both')]
     dff = dff[dff['tempo'].between(tempo_range[0], tempo_range[1], inclusive='both')]
+    dff = dff.loc[dff['explicit'].isin(list(explicit_checklist))]
+    dff = dff.loc[dff['mode'].isin(list(mode_checklist))]
 
+    if dff.empty:
+        return px.scatter(), px.scatter()
 
-    fig = px.scatter(dff, x=dff[xaxis_column_name],
+    fig1 = px.scatter(dff, x=dff[xaxis_column_name],
                      y=dff[yaxis_column_name],
                      hover_name=dff['song'], 
                     #  hover_data=[df['popularity'], df['danceability']],
@@ -331,17 +405,67 @@ def update_graph(xaxis_column_name, yaxis_column_name,
                     color_continuous_scale='deep',
                      )
 
-    fig.update_layout(margin={'l': 40, 'b': 40, 't': 10, 'r': 0}, hovermode='closest')
+    fig1.update_layout(margin={'l': 40, 'b': 40, 't': 10, 'r': 0}, hovermode='closest')
 
-    fig.update_xaxes(title=xaxis_column_name,
-                     type='linear' if xaxis_type == 'Linear' else 'log')
+    fig1.update_xaxes(title=xaxis_column_name,)
+                    #  type='linear' if xaxis_type == 'Linear' else 'log')
 
-    fig.update_yaxes(title=yaxis_column_name,
-                     type='linear' if yaxis_type == 'Linear' else 'log')
+    fig1.update_yaxes(title=yaxis_column_name,)
+                    #  type='linear' if yaxis_type == 'Linear' else 'log')
 
+    # advanced_chart_titles = 
+    # ['paiwise correlation', 
+    # 'treemap', 
+    # 'genre statistics', 
+    # 'best singers', 
+    # 'feature distribution']
+
+    fig2 = px.scatter()
+    if advanced_charts == advanced_chart_titles[0]:
+        fig2=px.imshow(dff.corr(),text_auto=True,height=800,width=800,color_continuous_scale=px.colors.sequential.Pinkyl,aspect='auto',title='<b>Paiwise Correlation')
+        fig2.update_layout(title_x=0.5)
+    elif advanced_charts == advanced_chart_titles[1]:
+        m = dff['artist'].value_counts()>=5
+        m = m.to_frame()
+        m = m[m['artist']==True].to_dict()
+        m = m.values()
+        m = list(m)
+        m = list(m[0].keys())
+        dff = dff[dff['artist'].isin(m)]
+        fig2=px.treemap(dff, path=[px.Constant('Singer'),'artist','genre','song'],values='popularity',title='<b>TreeMap of Singers')
+        fig2.update_traces(root_color='lightgreen')
+        fig2.update_layout(title_x=0.5)
+    elif advanced_charts == advanced_chart_titles[2]:
+        # fig2 = go.Figure(data=[go.Bar(x=genre_counts.keys(), y=genre_counts.values(), title="Genre Statistics", marker_color='rgb(158,202,225)')])
+        fig2=px.bar(x=genre_counts.keys(), y=genre_counts.values(), title="Genre Statistics", marker_color='rgb(158,202,225)')
+        fig2.update_xaxes(title='genre',)
+        fig2.update_yaxes(title='counts of songs',)
+        fig2.update_layout(title_x=0.5)
+
+    # if 'button_1' == ctx.triggered_id:
+        # fig2 = fig1
     
 
-    return fig
+    return fig1, fig2
+
+# @app.callback(
+#     # Output
+#     Output('sub-graphic', 'figure'),
+
+#     # Input
+#     Input('button_1', 'n_clicks'),
+
+# )
+
+# def update_multiple_images(button_1):
+
+#     fig2 = px.scatter()
+
+#     if 'button_1' == ctx.triggered_id:
+#         fig2 = px.scatter(dff2, x=dff2['year'],
+#                      y=dff2['popularity'],)
+#     return fig2
+
 
 
 if __name__ == '__main__':
