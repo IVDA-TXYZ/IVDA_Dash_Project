@@ -2,14 +2,17 @@ from dash import Dash, dcc, html, Input, Output, ctx
 import plotly.express as px
 import plotly.graph_objects as go
 import dash_bootstrap_components as dbc
-
+from dash_bootstrap_templates import load_figure_template
 
 
 import pandas as pd
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
-# app = Dash(__name__, external_stylesheets=external_stylesheets)
-app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
+app = Dash(__name__, external_stylesheets=external_stylesheets)
+# app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
+# app = Dash(__name__, external_stylesheets=[dbc.themes.CYBORG])
+
+# load_figure_template('CERULEAN')
 
 df = pd.read_csv('Datasets/Clean_Dataset.csv')
 
@@ -27,9 +30,20 @@ with open('Datasets/count_list.pickle', 'rb') as handle:
     genre_counts = pickle.load(handle)
 
 app.layout = \
-html.Div([
+html.Div(
+    style={
+'background-image': 'url("assets/bg1.jpg")',
+'background-repeat': 'no-repeat',
+# 'background-position': 'right top',
+# 'background-size': '150px 100px'
+},
+    
+    children=[
+        dbc.Card(
+            dbc.CardBody([
     
     # Right part
+    dbc.Col([
     html.Div([
         # Axes
         html.Div([
@@ -153,8 +167,9 @@ html.Div([
     className='cotainer',
 
     ),
-    
+    ], width=3),
     # Left part
+    dbc.Col([
     html.Div([
 
         # Parameters
@@ -162,7 +177,9 @@ html.Div([
             
             html.H1("🔍Search songs🎸",style = {"text-align":"center","margin-top":"10px"}),
             # Range sliders
-            html.Div([
+            html.Div(
+                [
+                    dbc.Row([
                 'Year',
                 dcc.RangeSlider(
                     # marks = None,
@@ -173,7 +190,9 @@ html.Div([
                     value=[df['year'].min(), df['year'].max()],
                     id='year_selector',
                 ),
+                    ]),
 
+                    dbc.Row([
                 'Duration',
                 dcc.RangeSlider(
                     marks = None,
@@ -183,6 +202,7 @@ html.Div([
                     value=[df['duration_ms'].min(), df['duration_ms'].max()],
                     id='duration_ms_selector',
                 ),
+                ]),
                 
                 'Popularity',
                 dcc.RangeSlider(
@@ -297,7 +317,8 @@ html.Div([
                     df['tempo'].max()],
                     id='tempo_selector',
                 ),
-            ],),
+            ],style={}
+            ),
 
      
             html.Div([
@@ -319,15 +340,18 @@ html.Div([
         
         
     ]),
-    
+    ]),
     
     
     
 
     
-
+        ]),),
 ])
 
+# app.layout = html.Div(children=[
+#     html.H1('Hello Dash', style={'background-image': 'url(assets/bg.webp)'})
+#     ])
 
 @app.callback(
     # Output
