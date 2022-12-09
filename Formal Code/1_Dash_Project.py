@@ -421,12 +421,14 @@ def update_graph(xaxis_column_name, yaxis_column_name,
     # 'best singers', 
     # 'feature distribution']
 
+
     fig2 = px.scatter()
     if advanced_charts == advanced_chart_titles[0]:
         fig2=px.imshow(dff.corr(),text_auto=True,color_continuous_scale=px.colors.sequential.Pinkyl,aspect='auto',title='<b>Paiwise Correlation')
         fig2.update_layout(title_x=0.5, height=800,width=800,)
     elif advanced_charts == advanced_chart_titles[1]:
-        m = dff['artist'].value_counts()>=5
+        max_value_count = max(dff['artist'].value_counts())
+        m = dff['artist'].value_counts()>=0.5 * max_value_count
         m = m.to_frame()
         m = m[m['artist']==True].to_dict()
         m = m.values()

@@ -45,6 +45,11 @@ genre: contain pop, hiphop, R&B
 explicit: True/False
 mode: 0/1
 
+6 int
+8 float
+1 bool
+3 string
+
 
 ### TODO
 - paiwise correlation of columns
