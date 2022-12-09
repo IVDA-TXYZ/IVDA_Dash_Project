@@ -1,11 +1,15 @@
 from dash import Dash, dcc, html, Input, Output, ctx
 import plotly.express as px
 import plotly.graph_objects as go
+import dash_bootstrap_components as dbc
+
+
 
 import pandas as pd
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
-app = Dash(__name__, external_stylesheets=external_stylesheets)
+# app = Dash(__name__, external_stylesheets=external_stylesheets)
+app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 
 df = pd.read_csv('Datasets/Clean_Dataset.csv')
 
@@ -159,25 +163,30 @@ html.Div([
             html.H1("🔍Search songs🎸",style = {"text-align":"center","margin-top":"10px"}),
             # Range sliders
             html.Div([
-                'Duration (ms)',
+                'Year',
                 dcc.RangeSlider(
+                    # marks = None,
+                    marks={str(year): str(year) for year in df['year'].unique() if year%2==0},
+                    min=df['year'].min(),
+                    max=df['year'].max(),
+                    step=None,
+                    value=[df['year'].min(), df['year'].max()],
+                    id='year_selector',
+                ),
+
+                'Duration',
+                dcc.RangeSlider(
+                    marks = None,
                     min=df['duration_ms'].min(),
                     max=df['duration_ms'].max(),
                     step=None,
                     value=[df['duration_ms'].min(), df['duration_ms'].max()],
                     id='duration_ms_selector',
                 ),
-                'Year',
-                dcc.RangeSlider(
-                    min=df['year'].min(),
-                    max=df['year'].max(),
-                    step=None,
-                    value=[df['year'].min(), df['year'].max()],
-                    id='year_selector',
-                    marks={str(year): str(year) for year in df['year'].unique() if year%2==0},
-                ),
+                
                 'Popularity',
                 dcc.RangeSlider(
+                    marks = None,
                     # min=df['popularity'].min(),
                     # max=df['popularity'].max(),
                     min=0,
@@ -190,6 +199,7 @@ html.Div([
                 ),
                 'Danceability',
                 dcc.RangeSlider(
+                    marks = None,
                     min=df['danceability'].min(),
                     max=df['danceability'].max(),
                     step=None,
@@ -199,6 +209,7 @@ html.Div([
                 ),
                 'Energy',
                 dcc.RangeSlider(
+                    marks = None,
                     min=df['energy'].min(),
                     max=df['energy'].max(),
                     step=None,
@@ -208,6 +219,7 @@ html.Div([
                 ),
                 'Key',
                 dcc.RangeSlider(
+                    marks = None,
                     min=df['key'].min(),
                     max=df['key'].max(),
                     step=None,
@@ -217,6 +229,7 @@ html.Div([
                 ),
                 'Loudness',
                 dcc.RangeSlider(
+                    marks = None,
                     min=df['loudness'].min(),
                     max=df['loudness'].max(),
                     step=None,
@@ -226,6 +239,7 @@ html.Div([
                 ),
                 'Speechiness',
                 dcc.RangeSlider(
+                    marks = None,
                     min=df['speechiness'].min(),
                     max=df['speechiness'].max(),
                     step=None,
@@ -235,6 +249,7 @@ html.Div([
                 ),
                 'Acousticness',
                 dcc.RangeSlider(
+                    marks = None,
                     min=df['acousticness'].min(),
                     max=df['acousticness'].max(),
                     step=None,
@@ -244,6 +259,7 @@ html.Div([
                 ),
                 'Instrumentalness',
                 dcc.RangeSlider(
+                    marks = None,
                     min=df['instrumentalness'].min(),
                     max=df['instrumentalness'].max(),
                     step=None,
@@ -253,6 +269,7 @@ html.Div([
                 ),
                 'Liveness',
                 dcc.RangeSlider(
+                    marks = None,
                     min=df['liveness'].min(),
                     max=df['liveness'].max(),
                     step=None,
@@ -262,6 +279,7 @@ html.Div([
                 ),
                 'Valence',
                 dcc.RangeSlider(
+                    marks = None,
                     min=df['valence'].min(),
                     max=df['valence'].max(),
                     step=None,
@@ -271,6 +289,7 @@ html.Div([
                 ),
                 'Tempo',
                 dcc.RangeSlider(
+                    marks = None,
                     min=df['tempo'].min(),
                     max=df['tempo'].max(),
                     step=None,
