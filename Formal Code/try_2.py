@@ -12,11 +12,9 @@ app = Dash(__name__, external_stylesheets=external_stylesheets)
 # app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 # app = Dash(__name__, external_stylesheets=[dbc.themes.CYBORG])
 
-# load_figure_template('CERULEAN')
+df = pd.read_csv('Datasets/Final_Dataset.csv')
 
-df = pd.read_csv('Datasets/Clean_Dataset_Norm_with_Genres.csv')
-
-dff2 = pd.read_csv('Datasets/Clean_Dataset_Norm_with_Genres.csv')
+dff2 = pd.read_csv('Datasets/Final_Dataset.csv')
 
 continues_attributes = ['duration_s', 'year',
        'popularity', 'danceability', 'energy', 'key', 'loudness', 'mode',
@@ -185,7 +183,7 @@ dbc.Card(
                 drawText('Loudness', 5, color=color_levels[2])
             ], width={"size": 6, "offset": 0},), 
             dbc.Col([
-                our_rangeslider('loudness_selector', 
+                our_rangeslider('loudness_selector', min=df['loudness'].min(), max=df['loudness'].max()
                 )
             ], width={"size": 6, "offset": 0}),
         ], align='center',),
@@ -258,7 +256,7 @@ dbc.Card(
                 drawText('Tempo', 5, color=color_levels[2])
             ], width={"size": 6, "offset": 0},), 
             dbc.Col([
-                our_rangeslider('tempo_selector', 
+                our_rangeslider('tempo_selector', min=df['tempo'].min(), max=df['tempo'].max()
                 )
             ], width={"size": 6, "offset": 0}),
         ], align='center',),
@@ -532,7 +530,7 @@ html.Div(
                                 ),
                                 dbc.Row([
                                     dbc.Col(
-                                        "Find an advanced chart:",
+                                        "Find an Advanced Chart:",
                                         style={'width': '50%', "margin-top": "15px", "margin-bottom": "10px", "textAlign": "center"}
                                     ),
                                 # dbc.Row([
@@ -653,7 +651,7 @@ def update_graph(xaxis_column_name, yaxis_column_name,
     dff = dff[dff['tempo'].between(tempo_range[0], tempo_range[1], inclusive='both')]
     dff = dff.loc[dff['explicit'].isin(list(explicit_checklist))]
     dff = dff.loc[dff['mode'].isin(list(mode_checklist))]
-
+    # print(len(dff))
     if dff.empty:
         return px.scatter(), px.scatter()
 
@@ -672,12 +670,18 @@ def update_graph(xaxis_column_name, yaxis_column_name,
                     color_continuous_scale='deep',
                      )
 
-    fig1.update_layout(margin={'l': 40, 'b': 40, 't': 10, 'r': 0}, hovermode='closest', height=400, width=400)
+    fig1.update_layout(margin={'l': 40, 'b': 40, 't': 10, 'r': 0}, 
+                    hovermode='closest', 
+                    height=400, 
+                    width=400,
+                    paper_bgcolor='rgba(0,0,0,0)',
+                    plot_bgcolor='rgba(0,0,0,0)',
+    )
 
-    fig1.update_xaxes(title=xaxis_column_name,)
+    fig1.update_xaxes(title=xaxis_column_name.capitalize(),showgrid=False)
                     #  type='linear' if xaxis_type == 'Linear' else 'log')
 
-    fig1.update_yaxes(title=yaxis_column_name,)
+    fig1.update_yaxes(title=yaxis_column_name.capitalize(),showgrid=False)
                     #  type='linear' if yaxis_type == 'Linear' else 'log')
 
     # advanced_chart_titles = 
@@ -691,8 +695,11 @@ def update_graph(xaxis_column_name, yaxis_column_name,
     fig2_h = 400
     fig2 = px.scatter()
     if advanced_charts == advanced_chart_titles[0]:
-        fig2=px.imshow(dff.corr(),text_auto=True,color_continuous_scale=px.colors.sequential.Pinkyl,aspect='auto',title='<b>Paiwise Correlation')
-        fig2.update_layout(title_x=0.5, height=fig2_h,width=fig2_w,)
+        
+        fig2=px.imshow(dff[x_axis_choices].corr(),text_auto='.2f',color_continuous_scale=px.colors.sequential.Pinkyl,aspect='auto',title='<b>Paiwise Correlation')
+        fig2.update_layout(title_x=0.5, height=fig2_h,width=fig2_w,paper_bgcolor='rgba(0,0,0,0)',margin=dict(l=20, r=20, t=30, b=0),)
+        fig2.update_xaxes(showticklabels = False,)
+        fig2.update_yaxes(showticklabels = False,)
     elif advanced_charts == advanced_chart_titles[1]:
         max_value_count = max(dff['artist'].value_counts())
         m = dff['artist'].value_counts()>=0.5 * max_value_count
@@ -704,13 +711,13 @@ def update_graph(xaxis_column_name, yaxis_column_name,
         dff = dff[dff['artist'].isin(m)]
         fig2=px.treemap(dff, path=[px.Constant('Singer'),'artist','genre','song'],values='popularity',title='<b>TreeMap of Singers')
         fig2.update_traces(root_color='lightgreen')
-        fig2.update_layout(title_x=0.5, height=fig2_h,width=fig2_w,)
+        fig2.update_layout(title_x=0.5, height=fig2_h,width=fig2_w,paper_bgcolor='rgba(0,0,0,0)',margin=dict(l=20, r=20, t=30, b=0),)
     elif advanced_charts == advanced_chart_titles[2]:
         # fig2 = go.Figure(data=[go.Bar(x=genre_counts.keys(), y=genre_counts.values(), title="Genre Statistics", marker_color='rgb(158,202,225)')])
         fig2=px.bar(x=genre_counts.keys(), y=genre_counts.values(), title="<b>Genre Statistics")
-        fig2.update_xaxes(title='genre',)
-        fig2.update_yaxes(title='counts of songs',)
-        fig2.update_layout(title_x=0.5, height=fig2_h,width=fig2_w,)
+        fig2.update_xaxes(title='genre'.capitalize(),)
+        fig2.update_yaxes(title='counts of songs'.capitalize(),)
+        fig2.update_layout(title_x=0.5, height=fig2_h,width=fig2_w,paper_bgcolor='rgba(0,0,0,0)',margin=dict(l=20, r=20, t=30, b=0),)
 
     # if 'button_1' == ctx.triggered_id:
         # fig2 = fig1
