@@ -2,13 +2,12 @@
 
 Dash_demos contain tutorial scripts from official website.
 
-See Formal Code, run 1_Dash_Project.py to get the html look.
-
-See Project Work Log.md for more information.
+To see our implementation, see Formal Code, run main.py to get the html interface.
 
 Before you start:
 
-pip install dash jupyter-dash
+ pip install dash jupyter-dash
+ pip install dash-bootstrap-components
 
-use python file instead of jupyter notebook
+See https://dash-bootstrap-components.opensource.faculty.ai/docs/components for dbc tutorials and https://dash.plotly.com/ for dash tutorials.
  
